@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/camera.dart';
-import 'package:flutter_application_2/delay.dart';
-import 'package:flutter_application_2/profile.dart';
+import 'package:flutter_application_2/upload_view.dart';
+import 'package:flutter_application_2/features/delay.dart';
+import 'package:flutter_application_2/features/profile/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: camera(),
+      home: delay(),
     );
   }
 }

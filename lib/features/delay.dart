@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/add_task.dart';
+import 'package:flutter_application_2/upload_view.dart';
+import 'package:flutter_application_2/core/models/Text_style.dart';
+import 'package:gap/gap.dart';
+import 'package:lottie/lottie.dart';
 
 class delay extends StatefulWidget {
   const delay({super.key});
@@ -11,11 +15,11 @@ class delay extends StatefulWidget {
 class _delayState extends State<delay> {
   @override
   void initState() {
-  Future.delayed(Duration(seconds: 4), () {
-   Navigator.of(context).pushReplacement(MaterialPageRoute(
-   builder: (context) => add_task(),
-   ));
-   });
+    Future.delayed(Duration(seconds: 5), () {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => camera(),
+      ));
+    });
   }
 
   @override
@@ -25,20 +29,18 @@ class _delayState extends State<delay> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/delay.PNG'),
+            Lottie.asset('assets/logo.json'),
             SizedBox(
               height: 5,
             ),
             Text(
               'Taskati',
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.w400),
+              style: getTitelStyle(fontSize: 24),
             ),
-            SizedBox(
-              height: 15,
-            ),
+            Gap(15),
             Text(
               'it\'s Time to Get Organzied',
-              style: TextStyle(color: Colors.grey, fontSize: 15),
+              style: getSmalStyle(),
             ),
           ],
         ),

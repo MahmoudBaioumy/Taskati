@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/colorsapp.dart';
+import 'package:flutter_application_2/core/models/colorsapp.dart';
 
 class add_task extends StatefulWidget {
   const add_task({super.key});
@@ -54,13 +54,13 @@ class _add_taskState extends State<add_task> {
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
-                    color: colorsapp.redcolor,
+                    color: colorsapp.pinkcolor,
                   ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
-                    color: colorsapp.redcolor,
+                    color: colorsapp.pinkcolor,
                   ),
                 ),
               ),
@@ -100,13 +100,13 @@ class _add_taskState extends State<add_task> {
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
-                    color: colorsapp.redcolor,
+                    color: colorsapp.pinkcolor,
                   ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
-                    color: colorsapp.redcolor,
+                    color: colorsapp.pinkcolor,
                   ),
                 ),
               ),
@@ -148,13 +148,13 @@ class _add_taskState extends State<add_task> {
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
-                    color: colorsapp.redcolor,
+                    color: colorsapp.pinkcolor,
                   ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
-                    color: colorsapp.redcolor,
+                    color: colorsapp.pinkcolor,
                   ),
                 ),
               ),
@@ -206,11 +206,11 @@ class _add_taskState extends State<add_task> {
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: colorsapp.redcolor),
+                              borderSide: BorderSide(color: colorsapp.pinkcolor),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: colorsapp.redcolor),
+                              borderSide: BorderSide(color: colorsapp.pinkcolor),
                             ),
                           ),
                         ),
@@ -253,11 +253,11 @@ class _add_taskState extends State<add_task> {
                             ),
                             errorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: colorsapp.redcolor),
+                              borderSide: BorderSide(color: colorsapp.pinkcolor),
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: colorsapp.redcolor),
+                              borderSide: BorderSide(color: colorsapp.pinkcolor),
                             ),
                           ),
                         ),
