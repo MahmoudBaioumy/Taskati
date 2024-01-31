@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/core/models/colorsapp.dart';
-
+import 'package:flutter_application_2/core/network/local_storage.dart';
+import 'package:flutter_application_2/upload_view.dart';
 
 class profile extends StatefulWidget {
   const profile({super.key});
@@ -10,6 +13,16 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
+  
+  String? name;
+  String? path;
+
+  void initState() {
+    super.initState();
+    path = Applocal.getData(Applocal.IMAGE_KEY);
+    name = Applocal.getData(Applocal.NAME_KEY);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +48,9 @@ class _profileState extends State<profile> {
               alignment: Alignment.bottomRight,
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/download.jpg'),
+                  backgroundImage: path != null
+                      ? FileImage(File(path!)) as ImageProvider
+                      : AssetImage('assets/avatar.webp'),
                   maxRadius: 80,
                 ),
                 CircleAvatar(
@@ -61,19 +76,17 @@ class _profileState extends State<profile> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
                   Text(
-                    'Mahmoud baioumy',
+                    '$name',
                     style: TextStyle(
                         color: colorsapp.primarycolor,
                         fontSize: 25,
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    width: 100,
-                  ),
+                  Spacer(),
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
                     child: IconButton(

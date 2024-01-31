@@ -1,13 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_application_2/add_task.dart';
 import 'package:flutter_application_2/core/Widget/CustomBottom.dart';
+import 'package:flutter_application_2/core/Widget/Custom_error_dio.dart';
 import 'package:flutter_application_2/core/models/Text_style.dart';
 import 'package:flutter_application_2/core/models/colorsapp.dart';
+import 'package:flutter_application_2/core/network/local_storage.dart';
+import 'package:flutter_application_2/features/home/Home_view.dart';
 import 'package:gap/gap.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
 String? path;
+String? name = '';
 
 class camera extends StatefulWidget {
   const camera({super.key});
@@ -22,10 +29,25 @@ class _cameraState extends State<camera> {
     return Scaffold(
       appBar: AppBar(actions: [
         TextButton(
-            onPressed: () {},
+            onPressed: () {
+              if (path != null && name!.isNotEmpty) {
+                Applocal.cashData(Applocal.IMAGE_KEY, path);
+                Applocal.cashData(Applocal.NAME_KEY, name);
+                Applocal.cashData(Applocal.ISUPLOAD_KEY, true);
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => home_view()));
+              } else if (path == null && name!.isNotEmpty) {
+                ShowErrorDialog(context, 'Please Upload youe Image');
+              } else if (path != null && name!.isEmpty) {
+                ShowErrorDialog(context, 'Enter Your Name');
+              } else {
+                ShowErrorDialog(
+                    context, 'please Upload Your image and Enter Your Name');
+              }
+            },
             child: Text('Done',
                 style: getTitelStyle(
-                    fontSize: 20, color: colorsapp.primarycolor))),
+                    fontSize: 17, color: colorsapp.primarycolor))),
       ]),
       body: Center(
         child: Column(
@@ -34,10 +56,10 @@ class _cameraState extends State<camera> {
             CircleAvatar(
               backgroundImage: (path != null)
                   ? FileImage(File(path!)) as ImageProvider
-                  : AssetImage('assets/avatar.webp'),
+                  : const AssetImage('assets/avatar.webp'),
               maxRadius: 80,
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             SizedBox(
@@ -48,7 +70,7 @@ class _cameraState extends State<camera> {
                     onPressed: () {
                       uploadFromCamera();
                     })),
-            Gap(5),
+            const Gap(5),
             SizedBox(
                 width: 220,
                 height: 45,
@@ -57,19 +79,26 @@ class _cameraState extends State<camera> {
                     onPressed: () {
                       uploadFromGallary();
                     })),
-            Gap(15),
-            Divider(
+            const Gap(15),
+            const Divider(
               thickness: 2,
               endIndent: 30,
               indent: 30,
             ),
-            Gap(15),
+            const Gap(15),
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
-                keyboardType: TextInputType.name,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    name = value;
+                  });
+                },
                 decoration: InputDecoration(
-                  label: Text('Enter your Name'),
+                  hintText: 'Enter your Name',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20)),
                   focusedBorder: OutlineInputBorder(
@@ -98,6 +127,7 @@ class _cameraState extends State<camera> {
   }
 
   uploadFromCamera() async {
+    //open camera and pick image
     var pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
     if (pickedImage != null) {
       setState(() {
@@ -107,6 +137,7 @@ class _cameraState extends State<camera> {
   }
 
   uploadFromGallary() async {
+    //open Gallary and take image
     var pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {

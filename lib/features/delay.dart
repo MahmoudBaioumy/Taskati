@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/add_task.dart';
+import 'package:flutter_application_2/core/network/local_storage.dart';
+import 'package:flutter_application_2/features/home/Home_view.dart';
 import 'package:flutter_application_2/upload_view.dart';
 import 'package:flutter_application_2/core/models/Text_style.dart';
 import 'package:gap/gap.dart';
@@ -15,10 +17,11 @@ class delay extends StatefulWidget {
 class _delayState extends State<delay> {
   @override
   void initState() {
+    //to check if state is true or false
+    bool isupload = Applocal.getData(Applocal.ISUPLOAD_KEY)?? false;
     Future.delayed(Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => camera(),
-      ));
+          builder: (context) => isupload ? home_view() : camera()));
     });
   }
 
