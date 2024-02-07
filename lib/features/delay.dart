@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/add_task.dart';
 import 'package:flutter_application_2/core/network/local_storage.dart';
+import 'package:flutter_application_2/core/utils/Text_style.dart';
 import 'package:flutter_application_2/features/home/Home_view.dart';
-import 'package:flutter_application_2/upload_view.dart';
-import 'package:flutter_application_2/core/models/Text_style.dart';
+import 'package:flutter_application_2/features/Upload/upload_view.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 
@@ -18,10 +17,10 @@ class _delayState extends State<delay> {
   @override
   void initState() {
     //to check if state is true or false
-    bool isupload = Applocal.getData(Applocal.ISUPLOAD_KEY)?? false;
-    Future.delayed(Duration(seconds: 5), () {
+    bool isupload = Applocal.getData(Applocal.ISUPLOAD_KEY) ?? false;
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => isupload ? home_view() : camera()));
+          builder: (context) => isupload ? const HomeView() : const camera()));
     });
   }
 
@@ -33,17 +32,18 @@ class _delayState extends State<delay> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset('assets/logo.json'),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Text(
               'Taskati',
-              style: getTitelStyle(fontSize: 24),
+              style: getTitelStyle(
+                  fontSize: 24, color: Theme.of(context).primaryColor),
             ),
-            Gap(15),
+            const Gap(15),
             Text(
               'it\'s Time to Get Organzied',
-              style: getSmalStyle(),
+              style: getSmalStyle(color: Theme.of(context).primaryColor),
             ),
           ],
         ),

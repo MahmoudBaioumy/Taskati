@@ -1,134 +1,190 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/core/Widget/CustomBottom.dart';
-import 'package:flutter_application_2/core/models/Text_style.dart';
-import 'package:flutter_application_2/core/models/colorsapp.dart';
+import 'package:flutter_application_2/core/utils/Text_style.dart';
+import 'package:flutter_application_2/core/utils/colorsapp.dart';
+import 'package:flutter_application_2/features/add_task/add_task_view.dart';
 import 'package:flutter_application_2/features/home/widgets/home_header.dart';
+import 'package:flutter_application_2/features/home/widgets/taskitem.dart';
+import 'package:flutter_application_2/features/model/task_model.dart';
 import 'package:gap/gap.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
-class home_view extends StatefulWidget {
-  const home_view({super.key});
+class HomeView extends StatefulWidget {
+  const HomeView({super.key});
 
   @override
-  State<home_view> createState() => _home_viewState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
-class _home_viewState extends State<home_view> {
+class _HomeViewState extends State<HomeView> {
+  String selectedDate = DateFormat.yMd().format(DateTime.now());
+
+  late Box<bool> boxmode;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    boxmode = Hive.box('mode');
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isDark = boxmode.get('darkmode') ?? false;
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    boxmode.put('darkmode', !isDark);
+                  });
+                },
+                icon: Icon(isDark ? Icons.dark_mode : Icons.light_mode_rounded
+                    // color: Colors.white,
+                    )),
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              //top
-              Homeheader(),
-              Gap(10),
-              //date
+              // Header
+              const Homeheader(),
+              // today
+              const Gap(20),
               Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         DateFormat.yMMMMd().format(DateTime.now()),
-                        style: getBodyStyle(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.displayMedium!,
                       ),
                       Text(
                         'Today',
-                        style: getBodyStyle(fontWeight: FontWeight.bold),
-                      )
+                        style: Theme.of(context).textTheme.displayMedium!,
+                      ),
                     ],
                   ),
-                  Spacer(),
-                  CustomBottom(text: '+ Add Task', onPressed: () {})
+                  const Spacer(),
+                  SizedBox(
+                    height: 45,
+                    width: 130,
+                    child: CustomBottom(
+                      text: '+ Add Task',
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const add_task(),
+                        ));
+                      },
+                    ),
+                  )
                 ],
               ),
-              Gap(20),
+              const Gap(20),
               DatePicker(
+                DateTime(2024, 1, 1),
                 height: 100,
                 width: 80,
-                DateTime.now(),
                 initialSelectedDate: DateTime.now(),
                 selectionColor: colorsapp.primarycolor,
                 selectedTextColor: Colors.white,
+                dateTextStyle: const TextStyle()
+                    .copyWith(color: Theme.of(context).primaryColor),
+                monthTextStyle: const TextStyle()
+                    .copyWith(color: Theme.of(context).primaryColor),
+                dayTextStyle: const TextStyle()
+                    .copyWith(color: Theme.of(context).primaryColor),
                 onDateChange: (date) {
                   // New date selected
-                  //setState(() {
-                  // _selectedValue = date;
-                  // });
+                  setState(() {
+                    selectedDate = DateFormat.yMd().format(date);
+                  });
                 },
               ),
-              Gap(10),
+
+              // Tasks List
+
               Expanded(
-                  child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(top: 10),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: colorsapp.primarycolor,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Flutter Task -1',
-                              style: getBodyStyle(color: colorsapp.whitecolor),
-                            ),
-                            Gap(5),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.watch_later_outlined,
-                                  color: colorsapp.whitecolor,
-                                ),
-                                Gap(10),
-                                Text(
-                                  '02:25 AM- 02:40 AM',
-                                  style:
-                                      getBodyStyle(color: colorsapp.greycolor),
-                                ),
-                              ],
-                            ),
-                            Gap(5),
-                            Text(
-                              'Flutter Task note',
-                              style: getSmalStyle(color: colorsapp.whitecolor),
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        Container(
-                          width: 0.5,
-                          height: 50,
-                          color: colorsapp.whitecolor,
-                        ),
-                        Gap(5),
-                        RotatedBox(
-                          quarterTurns: 3,
+                  child: ValueListenableBuilder<Box<Taskmodel>>(
+                valueListenable: Hive.box<Taskmodel>('task').listenable(),
+                builder: (context, Box<Taskmodel> box, child) {
+                  List<Taskmodel> tasks = [];
+                  for (var element in box.values) {
+                    if (selectedDate == element.date) {
+                      tasks.add(element);
+                    }
+                  }
+                  return tasks.isEmpty
+                      ? Center(
                           child: Text(
-                            'Todo',
-                            style: getTitelStyle(
-                                color: colorsapp.whitecolor, fontSize: 13),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
+                          'No task yet',
+                          style: getBodyStyle(
+                              color: Theme.of(context).primaryColor),
+                        ))
+                      : ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            Taskmodel task = tasks[index];
+                            return Dismissible(
+                                key: UniqueKey(),
+                                // delete continear
+                                secondaryBackground: Container(
+                                  color: Colors.red,
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Icon(Icons.delete),
+                                      Text('Delete'),
+                                    ],
+                                  ),
+                                ),
+                                // complete continear
+                                background: Container(
+                                  color: Colors.green,
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.check),
+                                      Text('Complete'),
+                                    ],
+                                  ),
+                                ),
+                                onDismissed: (direction) {
+                                  if (direction ==
+                                      DismissDirection.startToEnd) {
+                                    // complete
+                                    box.put(
+                                        task.id,
+                                        Taskmodel(
+                                            id: task.id,
+                                            title: task.title,
+                                            note: task.note,
+                                            date: task.date,
+                                            starttime: task.starttime,
+                                            endtime: task.endtime,
+                                            Color: 3,
+                                            isComplete: true));
+                                  } else {
+                                    // delete
+                                    box.delete(task.id);
+                                  }
+                                },
+                                child: TaskCardItem(task: task));
+                          },
+                        );
                 },
-              )),
+              ))
             ],
           ),
         ),
       ),
     );
   }
-
-
 }

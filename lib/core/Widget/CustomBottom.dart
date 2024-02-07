@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/core/models/colorsapp.dart';
+import 'package:flutter_application_2/core/utils/colorsapp.dart';
 
 class CustomBottom extends StatelessWidget {
   const CustomBottom({super.key, 

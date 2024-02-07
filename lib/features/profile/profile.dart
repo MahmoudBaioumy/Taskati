@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/core/models/colorsapp.dart';
 import 'package:flutter_application_2/core/network/local_storage.dart';
-import 'package:flutter_application_2/upload_view.dart';
+import 'package:flutter_application_2/core/utils/colorsapp.dart';
+import 'package:flutter_application_2/features/home/Home_view.dart';
+import 'package:flutter_application_2/features/profile/widget/Show_dialogs.dart';
+import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 
 class profile extends StatefulWidget {
   const profile({super.key});
@@ -13,50 +16,82 @@ class profile extends StatefulWidget {
 }
 
 class _profileState extends State<profile> {
-  
   String? name;
   String? path;
-
+  late Box<bool> boxmode;
+  @override
   void initState() {
     super.initState();
     path = Applocal.getData(Applocal.IMAGE_KEY);
     name = Applocal.getData(Applocal.NAME_KEY);
+    boxmode = Hive.box('mode');
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = boxmode.get('darkmode') ?? false;
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: colorsapp.primarycolor,
-        ),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => const HomeView(),
+              ));
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).primaryColor,
+            )),
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.light_mode,
-                color: colorsapp.primarycolor,
-              ))
+              onPressed: () {
+                setState(() {
+                  boxmode.put('darkmode', !isDark);
+                });
+              },
+              icon: Icon(isDark ? Icons.dark_mode : Icons.light_mode_rounded
+                  // color: Colors.white,
+                  )),
         ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ///////////////image//////////////////////////////
             Stack(
               alignment: Alignment.bottomRight,
               children: [
                 CircleAvatar(
                   backgroundImage: path != null
                       ? FileImage(File(path!)) as ImageProvider
-                      : AssetImage('assets/avatar.webp'),
+                      : const AssetImage('assets/avatar.webp'),
                   maxRadius: 80,
                 ),
                 CircleAvatar(
                   maxRadius: 20,
                   child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        GestureDetector(
+                          onTap: () async {
+                            ShowImageDialog(
+                              context,
+                              onTapCamera: () async {
+                                await uploadFromCamera().then((value) {
+                                  setState(() {
+                                    Navigator.of(context).pop();
+                                  });
+                                });
+                              },
+                              onTapGallery: await uploadFromGallary().then((value) {
+                                setState(() {
+                                  Navigator.of(context).pop();
+                                });
+                              }),
+                            );
+                          },
+                        );
+                      },
                       icon: Icon(
                         Icons.camera_alt,
                         color: colorsapp.primarycolor,
@@ -64,15 +99,16 @@ class _profileState extends State<profile> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Divider(
               endIndent: 50,
               indent: 50,
               thickness: 2,
+              color: colorsapp.primarycolor,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -86,11 +122,14 @@ class _profileState extends State<profile> {
                         fontSize: 25,
                         fontWeight: FontWeight.bold),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   CircleAvatar(
-                    backgroundColor: Colors.grey[200],
+                    backgroundColor: Theme.of(context).primaryColor,
                     child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          ShowNameDialog(context, name);
+                          setState(() {});
+                        },
                         icon: Icon(
                           Icons.edit,
                           color: colorsapp.primarycolor,
@@ -103,5 +142,26 @@ class _profileState extends State<profile> {
         ),
       ),
     );
+  }
+
+  uploadFromCamera() async {
+    //open camera and pick image
+    var pickedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedImage != null) {
+      setState(() {
+        path = pickedImage.path;
+      });
+    }
+  }
+
+  uploadFromGallary() async {
+    //open Gallary and take image
+    var pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        path = pickedImage.path;
+      });
+    }
   }
 }

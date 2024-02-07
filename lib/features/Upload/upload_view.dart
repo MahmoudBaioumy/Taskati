@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_2/add_task.dart';
+import 'package:flutter_application_2/features/add_task/add_task_view.dart';
 import 'package:flutter_application_2/core/Widget/CustomBottom.dart';
 import 'package:flutter_application_2/core/Widget/Custom_error_dio.dart';
-import 'package:flutter_application_2/core/models/Text_style.dart';
-import 'package:flutter_application_2/core/models/colorsapp.dart';
+import 'package:flutter_application_2/core/utils/Text_style.dart';
+import 'package:flutter_application_2/core/utils/colorsapp.dart';
 import 'package:flutter_application_2/core/network/local_storage.dart';
 import 'package:flutter_application_2/features/home/Home_view.dart';
 import 'package:gap/gap.dart';
@@ -35,7 +34,7 @@ class _cameraState extends State<camera> {
                 Applocal.cashData(Applocal.NAME_KEY, name);
                 Applocal.cashData(Applocal.ISUPLOAD_KEY, true);
                 Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => home_view()));
+                    MaterialPageRoute(builder: (context) => HomeView()));
               } else if (path == null && name!.isNotEmpty) {
                 ShowErrorDialog(context, 'Please Upload youe Image');
               } else if (path != null && name!.isEmpty) {
