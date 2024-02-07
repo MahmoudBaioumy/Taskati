@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/core/network/local_storage.dart';
 import 'package:flutter_application_2/core/utils/Text_style.dart';
 import 'package:flutter_application_2/features/home/Home_view.dart';
-import 'package:flutter_application_2/features/Upload/upload_view.dart';
+import 'package:flutter_application_2/features/profile/upload_view.dart';
 import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 

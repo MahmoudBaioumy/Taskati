@@ -72,25 +72,11 @@ class _profileState extends State<profile> {
                   maxRadius: 20,
                   child: IconButton(
                       onPressed: () {
-                        GestureDetector(
-                          onTap: () async {
-                            ShowImageDialog(
-                              context,
-                              onTapCamera: () async {
-                                await uploadFromCamera().then((value) {
-                                  setState(() {
-                                    Navigator.of(context).pop();
-                                  });
-                                });
-                              },
-                              onTapGallery: await uploadFromGallary().then((value) {
-                                setState(() {
-                                  Navigator.of(context).pop();
-                                });
-                              }),
-                            );
-                          },
-                        );
+                        ShowImageDialog(context, onTapCamera: () {
+                          uploadFromCamera();
+                        }, onTapGallery: () {
+                          uploadFromGallary();
+                        });
                       },
                       icon: Icon(
                         Icons.camera_alt,

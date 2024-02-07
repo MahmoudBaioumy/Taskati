@@ -1,5 +1,5 @@
 import 'package:flutter_application_2/features/model/task_model.dart';
-import 'package:flutter_application_2/features/Upload/upload_view.dart';
+import 'package:flutter_application_2/features/profile/upload_view.dart';
 import 'package:hive/hive.dart';
 
 class Applocal {
